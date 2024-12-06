@@ -5,7 +5,6 @@ const app = express()
 var morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person')
-const mongoose = require('mongoose')
 
 morgan.token('newWay', (req) => {
     return req.method === 'POST' ? JSON.stringify(req.body) : '';
@@ -40,7 +39,7 @@ app.get('/api/persons/:id', (request, response) => {
 app.delete('/api/persons/:id', (request, response) => {
     Person.findByIdAndDelete(request.params.id).then( () => { response.status(204).end() })
   })
-  
+
 app.post('/api/persons', (request, response) => {
     const body = request.body
   
@@ -64,6 +63,7 @@ app.put('/api/persons/:id', (request, response) => {
   { return response.status(400).json( {error: 'information missing'} ) }
 
   Person.findByIdAndUpdate(body._id).then(person => {
+    console.log(person)
     response.json(person)
   })
 })
