@@ -1,11 +1,11 @@
 {
   "name": "backend",
   "private": true,
-  "main": "index.js",
+  "main": "src/Backend/index.js",
   "version": "0.0.0",
   "scripts": {
-    "dev": "nodemon index.js",
-    "start": "node index.js",
+    "dev": "nodemon src/Backend/index.js",
+    "start": "node src/Backend/index.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
