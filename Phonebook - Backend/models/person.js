@@ -1,4 +1,6 @@
-const mongoose = require('mongoose')
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+dotenv.config();
 
 const url = process.env.MONGODB_URI
 console.log('connecting to', url)
@@ -38,4 +40,4 @@ PersonSchema.set('toJSON', {
   }
 })
 
-module.exports = mongoose.model('Person', PersonSchema)
+export default mongoose.model('Person', PersonSchema)

@@ -1,9 +1,9 @@
 {
   "name": "backend",
   "private": true,
-  "main": "index.js",
   "version": "0.0.0",
   "type": "module",
+  "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
