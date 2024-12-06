@@ -5,6 +5,7 @@ const app = express()
 var morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person')
+const mongoose = require('mongoose')
 
 morgan.token('newWay', (req) => {
     return req.method === 'POST' ? JSON.stringify(req.body) : '';
@@ -16,7 +17,9 @@ app.use(morgan(':method :url :status :res[content-length] :response-time ms - :n
 app.use(express.json())
 
 app.get('/info', (request, response) => {
-    response.send(`<p>Phonebook has info for '${persons.length}' people</p>${new Date()}`)
+  Person.countDocuments({})
+  .then(count => { response.send(`<p>Phonebook has info for '${count}' people</p>${new Date()}`)
+    }) 
   })
   
 app.get('/api/persons', (request, response) => {
@@ -37,13 +40,6 @@ app.get('/api/persons/:id', (request, response) => {
 app.delete('/api/persons/:id', (request, response) => {
     Person.findByIdAndDelete(request.params.id).then( () => { response.status(204).end() })
   })
-
-const generateId = () => {
-    const maxId = persons.length > 0
-      ? Math.max(...persons.map(n => Number(n.id)))
-      : 0
-    return String(maxId + 1)
-  }
   
 app.post('/api/persons', (request, response) => {
     const body = request.body
@@ -51,19 +47,24 @@ app.post('/api/persons', (request, response) => {
     if (!body || !body.name || !body.number ) 
     { return response.status(400).json( {error: 'name or number missing'} ) }
 
-    const isperson = 
-    Person.findById(body.id).then(personfound => {
-      if (personfound) { return response.status(400).json( {error: 'name already taken'} ) }
-    })
-
     const newPerson = new Person({
       name: body.name,
       number: body.number,
-      id: generateId(),
     })
   
     newPerson.save().then(savedPerson => {
       response.json(savedPerson)
+  })
+})
+
+app.put('/api/persons/:id', (request, response) => {
+  const body = request.body
+
+  if (!body || !body.name || !body.number || !body._id ) 
+  { return response.status(400).json( {error: 'information missing'} ) }
+
+  Person.findByIdAndUpdate(body._id).then(person => {
+    response.json(person)
   })
 })
 
