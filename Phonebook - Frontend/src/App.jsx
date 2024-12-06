@@ -103,6 +103,9 @@ const App = () => {
           setErrorMessage({message:`Added '${personObject.name}'`, type:'good'})
           setTimeout(() => { setErrorMessage({message:null, type:null}) }, 5000)
         })
+        .catch(error => {
+          console.log(error.response.data.error)
+        })
     }
   }
 
