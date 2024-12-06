@@ -1,18 +1,18 @@
 {
   "name": "backend",
   "private": true,
-  "main": "src/Backend/index.js",
+  "main": "index.js",
   "version": "0.0.0",
   "scripts": {
-    "dev": "nodemon src/Backend/index.js",
-    "start": "node src/Backend/index.js",
+    "dev": "nodemon index.js",
+    "start": "node index.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "author": "Mikko Salhoja",
     "license": "MIT",
     "server": "json-server -p3001 --watch db.json",    
-    "build:ui": "rm -rf dist && cd ../src/Frontend && npm run build && cp -r dist ../src/backend",
+    "build:ui": "rm -rf dist && cd ../Phonebook - Frontend && npm run build && cp -r dist ../Phonebook - Backend",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
   },
   "dependencies": {
