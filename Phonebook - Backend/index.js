@@ -1,10 +1,14 @@
-require('dotenv').config()
-const http = require('http')
-const express = require('express')
-const app = express()
-var morgan = require('morgan')
-const cors = require('cors')
-const Person = require('./models/person')
+import dotenv from 'dotenv';
+import express from 'express';
+import morgan from 'morgan';
+import cors from 'cors';
+import Person from './models/person.js';
+
+dotenv.config();
+const app = express();
+app.use(express.json());
+app.use(cors());
+app.use(morgan('tiny'));
 
 morgan.token('newWay', (req) => {
     return req.method === 'POST' ? JSON.stringify(req.body) : '';
@@ -94,6 +98,6 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3001 // eslint-disable-line no-undef
 app.listen(PORT)
 console.log(`Server running on port ${PORT}`)
