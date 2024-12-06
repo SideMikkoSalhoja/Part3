@@ -15,21 +15,21 @@ app.use(cors())
 app.use(morgan(':method :url :status :res[content-length] :response-time ms - :newWay'))
 app.use(express.json())
 
-app.get('/info', (request, response) => {
+app.get('/info', (request, response, next) => {
   Person.countDocuments({})
   .then(count => { response.send(`<p>Phonebook has info for '${count}' people</p>${new Date()}`)
     })
     .catch(error => next(error)) 
   })
   
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
   Person.find({}).then(persons => {
     response.json(persons)
   })
   .catch(error => next(error))
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id).then(personfound => {if (personfound) {
     response.json(personfound)
     } else {
@@ -39,12 +39,12 @@ app.get('/api/persons/:id', (request, response) => {
   .catch(error => next(error))
 })  
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndDelete(request.params.id).then( () => { response.status(204).end() })
     .catch(error => next(error))
   })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
   
     if (!body || !body.name || !body.number ) 
@@ -61,7 +61,7 @@ app.post('/api/persons', (request, response) => {
   .catch(error => next(error))
 })
 
-app.put('/api/persons/:id', (request, response) => {
+app.put('/api/persons/:id', (request, response, next) => {
   const body = request.body
 
   const newPerson = new Person({
@@ -70,6 +70,7 @@ app.put('/api/persons/:id', (request, response) => {
   })
 
   Person.findByIdAndUpdate(request.params.id, newPerson, { new: true }).then(person => {
+    console.log(person)
     response.json(person)
   })
   .catch(error => next(error))
