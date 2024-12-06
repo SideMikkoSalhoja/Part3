@@ -1,11 +1,9 @@
 {
   "name": "frontend",
   "private": true,
-  "main": "index.js",
   "version": "0.0.0",
   "scripts": {
-    "dev": "nodemon index.js",
-    "start": "node index.js",
+    "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",

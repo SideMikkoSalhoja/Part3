@@ -1,7 +1,7 @@
 import { useState, useEffect  } from 'react';
-import Filter from './Filter';
-import Showlist from './Showlist';
-import Add from './PersonAdd';
+import Filter from '../src/Filter';
+import Showlist from '../src/Showlist';
+import Add from '../src/PersonAdd';
 import personService from './services/persons'
 
 const App = () => {
