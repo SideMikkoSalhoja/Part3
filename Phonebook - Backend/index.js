@@ -1,45 +1,10 @@
+require('dotenv').config()
 const http = require('http')
 const express = require('express')
 const app = express()
 var morgan = require('morgan')
 const cors = require('cors')
-const mongoose = require('mongoose')
-
-const url =process.env.MONGODB_URI
-
-mongoose.set('strictQuery',false)
-mongoose.connect(url)
-
-const PersonSchema = new mongoose.Schema({
-  name: String,
-  number: Boolean,
-  id: String,
-})
-
-const Person = mongoose.model('Person', PersonSchema)
-
-let persons = [
-    { 
-      "id": "1",
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": "2",
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": "3",
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": "4",
-      "name": "Mary Poppendieck", 
-      "number": "000000"
-    }
-]
+const Person = require('./models/person')
 
 morgan.token('newWay', (req) => {
     return req.method === 'POST' ? JSON.stringify(req.body) : '';
@@ -61,14 +26,13 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    const personfound = persons.find(personf => personf.id === id)
-    if (personfound) {
-        response.json(personfound)
-      } else {
-        response.status(404).end()
-      }
+  Person.findById(request.params.id).then(personfound => {if (personfound) {
+    response.json(personfound)
+    } else {
+    response.status(404).end()
+    }
   })
+})  
 
 app.delete('/api/persons/:id', (request, response) => {
     const id = request.params.id
@@ -104,9 +68,10 @@ app.post('/api/persons', (request, response) => {
       id: generateId(),
     }
   
-    persons = persons.concat(newPerson)
-    response.json(newPerson)
+    newPerson.save().then(savedPerson => {
+      response.json(savedPerson)
   })
+})
 
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
