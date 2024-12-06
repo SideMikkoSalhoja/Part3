@@ -35,10 +35,7 @@ app.get('/api/persons/:id', (request, response) => {
 })  
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    persons = persons.filter(note => note.id !== id)
-  
-    response.status(204).end()
+    Person.findByIdAndDelete(request.params.id).then( () => { response.status(204).end() })
   })
 
 const generateId = () => {
@@ -51,22 +48,19 @@ const generateId = () => {
 app.post('/api/persons', (request, response) => {
     const body = request.body
   
-    if (!body) 
-    { return response.status(400).json( {error: 'content missing'} ) }
-
-    const isperson = persons.find(oneperson => oneperson.name.toLowerCase() === body.name.toLowerCase())
-
-    if (!body.name || !body.number ) 
+    if (!body || !body.name || !body.number ) 
     { return response.status(400).json( {error: 'name or number missing'} ) }
 
-    if (isperson) 
-    { return response.status(400).json( {error: 'name already taken'} ) }  
-  
-    const newPerson = {
+    const isperson = 
+    Person.findById(body.id).then(personfound => {
+      if (personfound) { return response.status(400).json( {error: 'name already taken'} ) }
+    })
+
+    const newPerson = new Person({
       name: body.name,
       number: body.number,
       id: generateId(),
-    }
+    })
   
     newPerson.save().then(savedPerson => {
       response.json(savedPerson)
